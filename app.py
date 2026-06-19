@@ -37,8 +37,9 @@ def load_chain():
     )
 
     llm = ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash",
-        temperature=0.3
+    model="gemini-2.5-flash",
+    temperature=0.3,
+    google_api_key=st.secrets["GOOGLE_API_KEY"]
     )
 
     base_retriever = vector_store.as_retriever(
