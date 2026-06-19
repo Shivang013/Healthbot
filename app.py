@@ -1,7 +1,5 @@
 import os
 import streamlit as st
-from langchain_community.document_loaders import DirectoryLoader, PyMuPDFLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -22,9 +20,6 @@ def load_css(file_path):
 
 load_css("style.css")
 
-# ----------------------------------------------------------------------------
-# Chain setup
-# ----------------------------------------------------------------------------
 @st.cache_resource
 def load_chain():
     embeddings = HuggingFaceEmbeddings(
@@ -32,25 +27,14 @@ def load_chain():
     )
 
     if not os.path.exists("faiss_db"):
-        loader = DirectoryLoader(
-            'data',
-            glob='**/*.pdf',
-            show_progress=True,
-            loader_cls=PyMuPDFLoader
-        )
-        docs = loader.load()
+        st.error("⚠️ FAISS index not found. Please run `python ingest.py` first.")
+        st.stop()
 
-        splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-        chunks = splitter.split_documents(docs)
-
-        vector_store = FAISS.from_documents(chunks, embeddings)
-        vector_store.save_local("faiss_db")
-    else:
-        vector_store = FAISS.load_local(
-            "faiss_db",
-            embeddings,
-            allow_dangerous_deserialization=True
-        )
+    vector_store = FAISS.load_local(
+        "faiss_db",
+        embeddings,
+        allow_dangerous_deserialization=True
+    )
 
     llm = ChatGoogleGenerativeAI(
         model="gemini-2.5-flash",
@@ -124,16 +108,13 @@ use the retrieved context together with well-established exercise science princi
         "chat_history": lambda x: x["chat_history"]
     })
 
-    parser = StrOutputParser()
-
-    return parallel_chain | prompt | llm | parser
+    return parallel_chain | prompt | llm | StrOutputParser()
 
 
 main_chain = load_chain()
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
-
 
 with st.sidebar:
     st.markdown('<div class="kb-eyebrow">📚 Trusted Sources</div>', unsafe_allow_html=True)
@@ -142,13 +123,11 @@ with st.sidebar:
     st.markdown('<div class="kb-tag">📙 ACSM Exercise Testing Guidelines</div>', unsafe_allow_html=True)
     st.markdown('<div class="kb-tag">📕 WHO Mental Health Resources</div>', unsafe_allow_html=True)
 
-
     st.markdown("---")
-    
+
     if st.button("🗑️ Clear chat", use_container_width=True):
         st.session_state.messages = []
         st.rerun()
-
 
 st.markdown("""
 <div class="HealthBot-hero">
@@ -157,12 +136,10 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-
 for message in st.session_state.messages:
     avatar = "🧑‍🎓" if message["role"] == "user" else "🌿"
     with st.chat_message(message["role"], avatar=avatar):
         st.write(message["content"])
-
 
 if len(st.session_state.messages) == 0:
     st.markdown('<div class="kb-eyebrow">Try asking</div>', unsafe_allow_html=True)
@@ -177,7 +154,6 @@ if len(st.session_state.messages) == 0:
         if col.button(suggestion, use_container_width=True):
             st.session_state.pending_input = suggestion
             st.rerun()
-
 
 user_input = st.chat_input("Ask about diet, exercise, or nutrition...")
 
@@ -198,11 +174,9 @@ if user_input:
             history.append(AIMessage(content=msg["content"]))
 
     with st.chat_message("assistant", avatar="🌿"):
-        with st.spinner("Thinking..."):
-            response = main_chain.invoke({
-                "question": user_input,
-                "chat_history": history
-            })
-            st.write(response)
+        response = st.write_stream(main_chain.stream({
+            "question": user_input,
+            "chat_history": history
+        }))
 
     st.session_state.messages.append({"role": "assistant", "content": response})
