@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+/* ── Design tokens ── */
+:root {
+    --paper:      #FAF7F0;
+    --sage:       #3E6E52;
+    --sage-deep:  #2C5440;
+    --sage-tint:  #E9F1EB;
+    --clay:       #E8714A;
+    --ink:        #21302A;
+    --muted:      #6B7A72;
+    --hairline:   #E4E0D6;
+}
+
+/* ── Base ── */
+html, body, [class*="css"] {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.stApp {
+    background-color: var(--paper);
+}
+
+/* Hide default Streamlit chrome */
+#MainMenu, footer {
+    visibility: hidden;
+}
+
+/* ── Hero header ── */
+.HealthBot-hero {
+    background: linear-gradient(135deg, var(--sage) 0%, var(--sage-deep) 100%);
+    border-radius: 18px;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 18px rgba(44, 84, 64, 0.18);
+}
+
+.HealthBot-hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 2.1rem;
+    color: #FFFFFF;
+    margin: 0 0 4px 0;
+    letter-spacing: -0.01em;
+}
+
+.HealthBot-hero p {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #DCEADF;
+    margin: 0;
+    font-size: 0.97rem;
+}
+
+/* ── Sidebar ── */
+section[data-testid="stSidebar"] {
+    background-color: #F3EFE4;
+    border-right: 1px solid var(--hairline);
+}
+
+section[data-testid="stSidebar"] h3 {
+    font-family: 'Fraunces', serif;
+    color: var(--sage-deep);
+}
+
+.kb-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFFFFF;
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    color: var(--ink);
+}
+
+.kb-eyebrow {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-weight: 600;
+    margin: 18px 0 10px 0;
+}
+
+/* ── Chat bubbles ── */
+[data-testid="stChatMessage"] {
+    background: transparent;
+    padding: 4px 0;
+}
+
+[data-testid="stChatMessageContent"] {
+    background: #FFFFFF;
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    padding: 14px 18px;
+    color: var(--ink);
+    line-height: 1.55;
+}
+
+/* User bubble gets a sage tint */
+[data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) [data-testid="stChatMessageContent"] {
+    background: var(--sage-tint);
+    border-color: #D3E5D9;
+}
+
+/* ── Suggestion chips ── */
+.stButton > button {
+    border-radius: 999px;
+    border: 1px solid var(--hairline);
+    background: #FFFFFF;
+    color: var(--sage-deep);
+    font-weight: 500;
+    padding: 8px 16px;
+    transition: all 0.15s ease;
+}
+
+.stButton > button:hover {
+    border-color: var(--sage);
+    background: var(--sage-tint);
+    color: var(--sage-deep);
+}
+
+/* ── Sidebar buttons (quieter, outlined) ── */
+section[data-testid="stSidebar"] .stButton > button {
+    border-radius: 10px;
+    border: 1px solid #D8CFAE;
+    background: transparent;
+    color: var(--muted);
+}
+
+section[data-testid="stSidebar"] .stButton > button:hover {
+    border-color: var(--clay);
+    color: var(--clay);
+    background: transparent;
+}
+
+/* ── Chat input ── */
+[data-testid="stChatInput"] textarea {
+    border-radius: 14px !important;
+}
