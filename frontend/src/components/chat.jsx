@@ -1,7 +1,7 @@
 import { useState } from "react";
 import api from "../services/api";
-import Message from "./Message";
-import Input from "./Input";
+import Message from "./message.jsx";
+import Input from "./input.jsx";
 
 export default function Chat(){
 
