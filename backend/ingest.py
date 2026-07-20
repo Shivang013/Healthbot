@@ -30,7 +30,7 @@ chunks = splitter.split_documents(docs)
 
 print(f"Created {len(chunks)} chunks")
 
-embeddings = HuggingFaceE2mbeddings(
+embeddings = HuggingFaceEmbeddings(
     model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
 
