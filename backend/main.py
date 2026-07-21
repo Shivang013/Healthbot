@@ -7,7 +7,10 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://healthbot-topaz.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -17,17 +20,13 @@ class ChatRequest(BaseModel):
     question: str
     history: list = []
 
-
 @app.get("/")
 def home():
     return {"message": "Backend Working"}
 
-
 @app.post("/chat")
 def chat(req: ChatRequest):
-
     answer = ask(req.question, req.history)
-
     return {
         "answer": answer
     }
