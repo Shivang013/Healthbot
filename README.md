@@ -1,4 +1,4 @@
-# HealthBot
+# HealthBot 
 
 A retrieval-augmented chatbot that answers diet, fitness, and general health questions. Responses are grounded in public health guidelines from WHO, ICMR, and ACSM, with Google Gemini handling generation.
 
