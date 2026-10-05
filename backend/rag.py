@@ -14,7 +14,10 @@ load_dotenv()
 
 
 embeddings = HuggingFaceEmbeddings(
-    model_name="sentence-transformers/all-MiniLM-L6-v2"
+    model_name="sentence-transformers/all-MiniLM-L6-v2",
+    model_kwargs={
+        "backend": "onnx"
+    }
 )
 
 if not os.path.exists("faiss_db"):
