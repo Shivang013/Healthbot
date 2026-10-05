@@ -7,7 +7,5 @@ sentence-transformers
 faiss-cpu
 pymupdf
 python-dotenv
-torch
-torchvision
 fastapi
 uvicorn
